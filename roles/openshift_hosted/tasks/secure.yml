@@ -21,13 +21,21 @@
     state: list
   register: docker_registry_service
 
+- name: debug docker_registry_route
+  debug:
+    msg: "{{ docker_registry_route.results }}"
+
+- name: debug docker_registry_route
+  debug:
+    msg: "{{ docker_registry_service }}"
+
 - name: Generate self-signed docker-registry certificates
   oc_adm_ca_server_cert:
     signer_cert: "/etc/origin/master/ca.crt"
     signer_key: "/etc/origin/master/ca.key"
     signer_serial: "/etc/origin/master/ca.serial.txt"
     hostnames:
-    - "{{ docker_registry_service.results.clusterip }}"
+    - "{{ docker_registry_service.ansible_module_results.clusterip }}"
     - "{{ docker_registry_route.results[0].spec.host }}"
     - "{{ openshift_hosted_registry_name }}.default.svc"
     - "{{ openshift_hosted_registry_name }}.default.svc.{{ openshift_cluster_domain }}"
